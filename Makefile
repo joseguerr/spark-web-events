@@ -13,21 +13,21 @@ build: # Build and package the application and its dependencies to be used throu
 	poetry build
 	poetry run pip install dist/*.whl -t libs
 	mkdir deps
-	cp airbyte_etl/main.py app_config.yaml airbyte_etl/tasks/*/dq_checks_*.yaml deps
+	cp spark_web_events_etl/main.py app_config.yaml spark_web_events_etl/tasks/*/dq_checks_*.yaml deps
 	poetry run python -m zipfile -c deps/libs.zip libs/*
 
 .PHONY: run-local
-run-local: # Run a task locally (example: make run-local task=standardise execution-date=2021-01-01).
+run-local: # Run a task locally (example: make run-local task=standardise execution-date=2023-04-12).
 	poetry run spark-submit \
 	--master local[*] \
 	--packages=io.delta:delta-spark_2.12:3.1.0 \
 	--conf spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension \
 	--conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog \
-	airbyte_etl/main.py \
+	spark_web_events_etl/main.py \
 	--task ${task} \
 	--execution-date ${execution-date} \
 	--config-file-path app_config.yaml
 
 .PHONY: clean
 clean: # Clean auxiliary files.
-	rm -rf deps/ dist/ libs/ .pytest_cache .mypy_cache airbyte_etl.egg-info *.xml .coverage* derby.log metastore_db spark-warehouse
+	rm -rf deps/ dist/ libs/ .pytest_cache .mypy_cache spark_web_events_etl.egg-info *.xml .coverage* derby.log metastore_db spark-warehouse
