@@ -1,0 +1,19 @@
+---
+dynaconf_merge:
+  true
+
+global:
+  task_argument_class_mapping:
+    standardise: spark_web_events_etl.tasks.StandardiseDataTask
+    curate: spark_web_events_etl.tasks.CurateDataTask
+
+development:
+  data:
+    raw:
+      location: data-lake-raw-dev/web_events_airbyte
+    standardised:
+      table: default.web_events_airbyte_standardised
+      dq_checks_file: spark_web_events_etl/tasks/standardise_data/dq_checks_standardised.yaml
+    curated:
+      table: default.web_events_airbyte_curated
+      dq_checks_file: spark_web_events_etl/tasks/curate_data/dq_checks_curated.yaml

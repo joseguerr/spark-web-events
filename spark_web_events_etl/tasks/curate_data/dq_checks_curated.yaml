@@ -1,0 +1,23 @@
+filter ${table} [daily]:
+   where: _run_date = ${run_date}
+
+checks for ${table} [daily]:
+  - schema:
+      name: Curated dataset should have specific schema.
+      fail:
+        when wrong column type:
+          domain_of_interest: string
+          unique_events: bigint
+          rank: int
+          _run_date: int
+  - row_count > 0:
+      name: Curated dataset should not be empty.
+  - invalid_count(domain_of_interest) = 0:
+      valid values: ["direct traffic", "opensea", "heni", "other"]
+      name: domain_of_interest should have valid values.
+  - invalid_count(unique_events) = 0:
+      valid min: 0
+      name: Value of unique_events should be positive.
+  - invalid_count(rank) = 0:
+      valid min: 0
+      name: Value of rank should be positive.
