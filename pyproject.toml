@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "spark-web-events-etl"
+version = "0.1.0"
+description = ""
+authors = ["joseguerr <jose-guerra94@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+dynaconf = "3.2.1"
+delta-spark = "2.4"
+soda-core-spark-df = "^3.3.5"
+
+
+[tool.poetry.group.dev.dependencies]
+pyspark = "3.4.1"
+pytest = "^8.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
