@@ -1,0 +1,18 @@
+filter ${table} [daily]:
+   where: _run_date = ${run_date}
+
+checks for ${table} [daily]:
+  - schema:
+      name: Standardised dataset should have specific schema.
+      fail:
+        when wrong column type:
+          distinct_id: string
+          device_id: string
+          referring_domain: string
+          current_url: string
+          device: string
+          event_processed_timestamp: bigint
+          airbyte_emitted_at_timestamp: bigint
+          _run_date: int
+  - row_count > 0:
+      name: standardised dataset should not be empty.
