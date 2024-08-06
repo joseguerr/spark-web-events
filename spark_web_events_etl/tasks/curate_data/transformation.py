@@ -36,7 +36,7 @@ class CurateDataTransformation(AbstractTransformation):
             "domain_of_interest",
             when(col("referring_domain") == "$direct", "direct traffic")
             .when(col("referring_domain").like("%opensea%"), "opensea")
-            .when(col("referring_domain").like("%heni%"), "heni")
+            .when(col("referring_domain").like("%abc%"), "abc")
             .otherwise("other"),
         )
 
