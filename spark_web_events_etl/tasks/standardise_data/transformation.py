@@ -5,7 +5,8 @@ from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, lit
 from pyspark.sql.types import LongType
 
-from spark_web_events_etl.tasks.abstract.transformation import AbstractTransformation
+from spark_web_events_etl.tasks.abstract.transformation import \
+    AbstractTransformation
 
 
 class StandardiseDataTransformation(AbstractTransformation):
@@ -19,7 +20,7 @@ class StandardiseDataTransformation(AbstractTransformation):
         )
 
         return reduce(DataFrame.transform, transformations, df)
-    
+
     @staticmethod
     def _normalise_columns(df: DataFrame) -> DataFrame:
         return (
@@ -28,8 +29,14 @@ class StandardiseDataTransformation(AbstractTransformation):
             .withColumn("referring_domain", col("_airbyte_data.referring_domain"))
             .withColumn("current_url", col("_airbyte_data.current_url"))
             .withColumn("device", col("_airbyte_data.device"))
-            .withColumn("event_processed_timestamp", col("_airbyte_data.processed_time").cast(LongType()))
-            .withColumn("airbyte_emitted_at_timestamp", col("_airbyte_emitted_at").cast(LongType()))
+            .withColumn(
+                "event_processed_timestamp",
+                col("_airbyte_data.processed_time").cast(LongType()),
+            )
+            .withColumn(
+                "airbyte_emitted_at_timestamp",
+                col("_airbyte_emitted_at").cast(LongType()),
+            )
         )
 
     def _select_final_columns(self, df: DataFrame) -> DataFrame:
