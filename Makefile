@@ -8,6 +8,14 @@ setup: # Set up local virtual env for development.
 	poetry config virtualenvs.in-project true --local
 	poetry install
 
+.PHONY: lint
+lint: # Run code linter tools.
+	poetry run pre-commit run --all-files
+
+.PHONY: test
+test: # Run unit and integration tests.
+	poetry run pytest --cov -vvvv --showlocals --disable-warnings tests
+
 .PHONY: build
 build: # Build and package the application and its dependencies to be used through spark-submit.
 	poetry build
