@@ -21,7 +21,7 @@ repos:
         pass_filenames: false
     -   id: ruff
         name: ruff
-        entry: ruff spark_web_events_etl tests
+        entry: ruff check spark_web_events_etl tests
         language: system
         types: [python]
         pass_filenames: false

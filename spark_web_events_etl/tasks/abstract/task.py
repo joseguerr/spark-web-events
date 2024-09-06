@@ -4,7 +4,6 @@ from logging import Logger
 from typing import List
 
 from pyspark.sql import Catalog, DataFrame, SparkSession
-from pyspark.sql.types import StructType
 from soda.scan import Scan
 
 from spark_web_events_etl.config_manager import ConfigManager

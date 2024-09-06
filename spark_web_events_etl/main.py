@@ -1,7 +1,6 @@
 import argparse
 import datetime
 import pathlib
-import sys
 
 from pyspark.sql import SparkSession
 
