@@ -11,7 +11,7 @@ Implemented Data Lakehouse architecture with the following layers:
 
 ## Data pipeline design
 The data pipeline consists of the following tasks:
- - Standardise task: Flattens data and applies basic data quality checks. This may be beneficial for many teams. 
+ - Standardise task: Flattens data and applies basic data quality checks. This may be beneficial for many teams.
  - Curate task: consumes the dataset from `Standardised`, performs transformations and business logic, and persists into `Curated`.
 
 The datasets are initially partitioned by execution date (with the option to add more partitioning columns).

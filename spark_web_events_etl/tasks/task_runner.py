@@ -12,7 +12,13 @@ class TaskRunner:
     Loads a Task class and calls its `run()` method.
     """
 
-    def __init__(self, spark: SparkSession, config_manager: ConfigManager, task: str, execution_date: datetime.date):
+    def __init__(
+        self,
+        spark: SparkSession,
+        config_manager: ConfigManager,
+        task: str,
+        execution_date: datetime.date,
+    ):
         self.spark = spark
         self.config_manager = config_manager
         self.task = task
@@ -22,11 +28,15 @@ class TaskRunner:
     def run(self) -> None:
         task_class = self._load_task()
         self.logger.info(f"Running task: {task_class}")
-        task_class(self.spark, self.logger, self.execution_date, self.config_manager).run()
+        task_class(
+            self.spark, self.logger, self.execution_date, self.config_manager
+        ).run()
 
     def _load_task(self) -> Callable:
         self.logger.info(f"Loading task '{self.task}'...")
-        task_class_path = self.config_manager.get(f"task_argument_class_mapping.{self.task}")
+        task_class_path = self.config_manager.get(
+            f"task_argument_class_mapping.{self.task}"
+        )
         return _load_class(task_class_path)
 
 

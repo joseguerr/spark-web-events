@@ -26,7 +26,9 @@ class CurateDataTransformation(AbstractTransformation):
     @staticmethod
     def _remove_duplicates(df: DataFrame) -> DataFrame:
         """Drop duplicates based on "distinct_id", keeping the first event (based on "timestamp")."""
-        window_spec = Window.partitionBy(["distinct_id"]).orderBy(col("event_processed_timestamp").desc())
+        window_spec = Window.partitionBy(["distinct_id"]).orderBy(
+            col("event_processed_timestamp").desc()
+        )
         df = df.withColumn("rnum", row_number().over(window_spec))
         return df.where(col("rnum") == 1).drop("rnum")
 
@@ -36,14 +38,20 @@ class CurateDataTransformation(AbstractTransformation):
             "domain_of_interest",
             when(col("referring_domain") == "$direct", "direct traffic")
             .when(col("referring_domain").like("%opensea%"), "opensea")
-            .when(col("referring_domain").like("%heni%"), "heni")
+            .when(col("referring_domain").like("%abc%"), "abc")
             .otherwise("other"),
         )
 
     @staticmethod
     def _calculate_rank_domain_of_interest(df: DataFrame) -> DataFrame:
-        df = df.groupBy("domain_of_interest").count().withColumnRenamed("count", "unique_events")
-        df = df.withColumn("rank", dense_rank().over(Window.orderBy(desc("unique_events"))))
+        df = (
+            df.groupBy("domain_of_interest")
+            .count()
+            .withColumnRenamed("count", "unique_events")
+        )
+        df = df.withColumn(
+            "rank", dense_rank().over(Window.orderBy(desc("unique_events")))
+        )
         return df.orderBy(desc("rank"))
 
     def _select_final_columns(self, df: DataFrame) -> DataFrame:
