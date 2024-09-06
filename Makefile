@@ -28,7 +28,7 @@ build: # Build and package the application and its dependencies to be used throu
 run-local: # Run a task locally (example: make run-local task=standardise execution-date=2023-04-12).
 	poetry run spark-submit \
 	--master local[*] \
-	--packages=io.delta:delta-spark_2.12:3.1.0 \
+	--packages=io.delta:delta-spark_2.12:3.2.0 \
 	--conf spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension \
 	--conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog \
 	spark_web_events_etl/main.py \
