@@ -2,8 +2,9 @@ from pyspark.sql import DataFrame
 from pyspark.sql.types import StringType, StructField, StructType
 
 from spark_web_events_etl.tasks.abstract.task import AbstractTask
-from spark_web_events_etl.tasks.standardise_data.transformation import \
-    StandardiseDataTransformation
+from spark_web_events_etl.tasks.standardise_data.transformation import (
+    StandardiseDataTransformation,
+)
 
 
 class StandardiseDataTask(AbstractTask):

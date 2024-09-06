@@ -1,8 +1,9 @@
 from pyspark.sql import DataFrame
 
 from spark_web_events_etl.tasks.abstract.task import AbstractTask
-from spark_web_events_etl.tasks.curate_data.transformation import \
-    CurateDataTransformation
+from spark_web_events_etl.tasks.curate_data.transformation import (
+    CurateDataTransformation,
+)
 
 
 class CurateDataTask(AbstractTask):

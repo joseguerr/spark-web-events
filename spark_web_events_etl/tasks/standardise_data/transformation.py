@@ -5,8 +5,7 @@ from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, lit
 from pyspark.sql.types import LongType
 
-from spark_web_events_etl.tasks.abstract.transformation import \
-    AbstractTransformation
+from spark_web_events_etl.tasks.abstract.transformation import AbstractTransformation
 
 
 class StandardiseDataTransformation(AbstractTransformation):
