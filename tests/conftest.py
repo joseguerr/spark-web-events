@@ -3,9 +3,6 @@ from typing import Generator
 import pytest as pytest
 from pyspark.sql import SparkSession
 from pyspark.sql.types import (
-    ArrayType,
-    BooleanType,
-    FloatType,
     IntegerType,
     LongType,
     StringType,
@@ -36,50 +33,39 @@ def spark() -> Generator:
 def schema_raw() -> StructType:
     return StructType(
         [
-            StructField("_airbyte_emitted_at", StringType()),
-            StructField(
-                "_airbyte_data",
-                ArrayType(
-                    StructType(
-                        [
-                            StructField("referring_domain", StringType()),
-                            StructField("distinct_id", StringType()),
-                            StructField("device_id", StringType()),
-                            StructField("device", StringType(), nullable=True),
-                            StructField("current_url", StringType()),
-                            StructField("processed_time", StringType()),
-                        ]
-                    )
-                ),
-                nullable=False,
-            ),
-        ]
-    )
+            StructField("_airbyte_emitted_at", StringType(), False),
+            StructField("_airbyte_data", StructType([
+                StructField("referring_domain", StringType(), False),
+                StructField("distinct_id", StringType(), False),
+                StructField("device_id", StringType(), False),
+                StructField("device", StringType(), True),
+                StructField("current_url", StringType(), False),
+                StructField("processed_time", StringType(), False)
+        ]), False)
+    ])
 
 
 @pytest.fixture(scope="session")
 def schema_standardised() -> StructType:
-    return StructType(
-        [
-            StructField("distinct_id", StringType()),
-            StructField("device_id", StringType()),
-            StructField("referring_domain", StringType()),
-            StructField("current_url", StringType()),
-            StructField("device", StringType()),
-            StructField("event_processed_timestamp", LongType()),
-            StructField("airbyte_emitted_at_timestamp", LongType()),
-            StructField("_run_date", IntegerType()),
-        ]
-    )
+    return StructType([
+        StructField("distinct_id", StringType(), False),
+        StructField("device_id", StringType(), False),
+        StructField("referring_domain", StringType(), False),
+        StructField("current_url", StringType(), False),
+        StructField("device", StringType(), True),
+        StructField("event_processed_timestamp", LongType(), False),
+        StructField("airbyte_emitted_at_timestamp", LongType(), False),
+        StructField("_run_date", IntegerType(), False)
+    ])
 
 
 @pytest.fixture(scope="session")
 def schema_curated() -> StructType:
     return StructType(
         [
-            StructField("domain_of_interest", StringType()),
-            StructField("unique_events", LongType()),
-            StructField("rank", IntegerType()),
-            StructField("_run_date", IntegerType()),
+            StructField("domain_of_interest", StringType(), False),
+            StructField("unique_events", LongType(), False),
+            StructField("rank", IntegerType(), False),
+            StructField("_run_date", IntegerType(), False),
         ]
     )
