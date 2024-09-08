@@ -13,9 +13,7 @@ from tests.unit.tasks.standardise_data.fixtures.data import (
 from tests.utils import assert_data_frames_equal
 
 
-def test_transform(
-    spark: SparkSession, schema_raw: StructType, schema_standardised: StructType
-) -> None:
+def test_transform(spark: SparkSession, schema_raw: StructType, schema_standardised: StructType) -> None:
     # GIVEN
     transformation = StandardiseDataTransformation(execution_date=date(2023, 4, 12))
     df_input = spark.createDataFrame(

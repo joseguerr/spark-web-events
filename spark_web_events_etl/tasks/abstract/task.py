@@ -48,12 +48,8 @@ class AbstractTask(ABC):
             df.write.mode("overwrite").insertInto(self._output_table)
         else:
             self.logger.info("Table does not exist, creating and saving.")
-            partition_cols = [
-                self._partition_column_run_day
-            ] + self._partition_columns_extra
-            df.write.mode("overwrite").partitionBy(partition_cols).format(
-                "delta"
-            ).saveAsTable(self._output_table)
+            partition_cols = [self._partition_column_run_day] + self._partition_columns_extra
+            df.write.mode("overwrite").partitionBy(partition_cols).format("delta").saveAsTable(self._output_table)
 
     def _run_data_quality_checks(self) -> None:
         self.logger.info(f"Running Data Quality checks for table {self._output_table}.")

@@ -46,11 +46,7 @@ class StandardiseDataTask(AbstractTask):
 
     def _input(self) -> DataFrame:
         self.logger.info(f"Reading raw data from {self._input_path}.")
-        return (
-            self.spark.read.format("json")
-            .schema(self._get_schema)
-            .load(path=self._input_path)
-        )
+        return self.spark.read.format("json").schema(self._get_schema).load(path=self._input_path)
 
     def _transform(self, df: DataFrame) -> DataFrame:
         return StandardiseDataTransformation(self.execution_date).transform(df)

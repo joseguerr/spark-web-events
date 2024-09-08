@@ -21,9 +21,7 @@ class CurateDataTask(AbstractTask):
 
     def _input(self) -> DataFrame:
         partition_expr = f"{self._partition_column_run_day} = {self.execution_date.strftime('%Y%m%d')}"
-        self.logger.info(
-            f"Reading from table {self._input_table}. Date partition '{partition_expr}'."
-        )
+        self.logger.info(f"Reading from table {self._input_table}. Date partition '{partition_expr}'.")
         return self.spark.read.table(self._input_table).where(partition_expr)
 
     def _transform(self, df: DataFrame) -> DataFrame:
