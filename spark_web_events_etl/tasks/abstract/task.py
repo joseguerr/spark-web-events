@@ -94,5 +94,4 @@ class AbstractTask(ABC):
         return []
 
     def _table_exists(self, table: str) -> bool:
-        db_name, table_name = table.split(".")
-        return Catalog(self.spark).tableExists(dbName=db_name, tableName=table_name)
+        return Catalog(self.spark).tableExists(table)
