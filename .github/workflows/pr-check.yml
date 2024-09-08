@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  id-token: write
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }} - ${{ github.event.pull_request.number }}
   cancel-in-progress: true
@@ -30,3 +34,36 @@ jobs:
 
     - name: Run tests
       run: make test
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: test
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: make setup
+
+    - name: Build application
+      run: make build
+
+    - name: Assume AWS Role
+      id: assume-role
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+        role-session-name: github-actions
+        aws-region: eu-west-1
+
+    - name: Publish to S3
+      run: aws s3 sync --delete deps s3://spark-web-events-etl-binaries/${DEST_DIR}
+      env:
+        DEST_DIR: "PR-${{ github.event.pull_request.number }}"
