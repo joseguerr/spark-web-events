@@ -58,7 +58,7 @@ jobs:
         role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
         role-session-name: github-actions
         aws-region: eu-west-1
-        external-id: ${{ secrets.AWS_EXTERNAL_ID }}
+        role-external-id: ${{ secrets.AWS_EXTERNAL_ID }}
 
     - name: Publish to S3
       run: aws s3 sync --delete deps s3://spark-web-events-etl-binaries/${DEST_DIR}
