@@ -13,7 +13,7 @@ checks for ${table} [daily]:
   - row_count > 0:
       name: Curated dataset should not be empty.
   - invalid_count(domain_of_interest) = 0:
-      valid values: ["direct traffic", "opensea", "heni", "other"]
+      valid values: ["direct traffic", "opensea", "abc", "other"]
       name: domain_of_interest should have valid values.
   - invalid_count(unique_events) = 0:
       valid min: 0
