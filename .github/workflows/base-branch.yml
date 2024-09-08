@@ -35,3 +35,91 @@ jobs:
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: test
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: make setup
+
+    - name: Build application
+      run: make build
+
+    - name: Get last merged PR title
+      id: get-pr-title
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { data: pulls } = await github.pulls.list({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'closed',
+            sort: 'updated',
+            direction: 'desc',
+            per_page: 1
+          });
+          const lastMergedPR = pulls.find(pr => pr.merged_at !== null);
+          if (lastMergedPR) {
+            core.setOutput('title', lastMergedPR.title);
+          } else {
+            core.setFailed('No merged pull request found.');
+          }
+
+    - name: Determine version bump type
+      id: version-bump
+      run: |
+        PR_TITLE=$(echo "${{ steps.get-pr-title.outputs.title }}" | tr '[:upper:]' '[:lower:]')
+        if [[ "$PR_TITLE" == *"major"* ]]; then
+          echo "BUMP_TYPE=major" >> $GITHUB_ENV
+        elif [[ "$PR_TITLE" == *"minor"* ]]; then
+          echo "BUMP_TYPE=minor" >> $GITHUB_ENV
+        else
+          echo "BUMP_TYPE=patch" >> $GITHUB_ENV
+
+    - name: Get latest release version
+      id: get-latest-version
+      run: |
+        LATEST_VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
+        if [[ "$LATEST_VERSION" == "null" ]]; then
+          echo "LATEST_VERSION=0.1.0" >> $GITHUB_ENV
+        else
+          echo "LATEST_VERSION=${LATEST_VERSION}" >> $GITHUB_ENV
+
+    - name: Bump version
+      id: bump-version
+      run: |
+        pip install semver
+        NEW_VERSION=$(python -c "import semver; print(semver.VersionInfo.parse('${{ env.LATEST_VERSION }}').bump_${{ env.BUMP_TYPE }}())")
+        echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+
+    - name: Create Github release
+      uses: "marvinpinto/action-automatic-releases@v1.2.1"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: false
+        automatic_release_tag: "${{ env.NEW_VERSION }}"
+        files: deps/*
+
+    - name: Assume AWS Role
+      id: assume-role
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+        role-session-name: github-actions
+        aws-region: eu-west-1
+
+    - name: Publish to S3
+      run: aws s3 sync --delete deps s3://spark-web-events-etl-binaries/${DEST_DIR}
+      env:
+        DEST_DIR: "PR-${{ github.event.pull_request.number }}"
