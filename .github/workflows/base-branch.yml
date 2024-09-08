@@ -1,8 +1,9 @@
-name: PR Check
+name: Base Branch
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }} - ${{ github.event.pull_request.number }}
@@ -62,8 +63,10 @@ jobs:
       id: get-pr
 
     - name: Determine PR version bump type
+      if: steps.get-pr.outputs.pr_found == 'true'
       run: |
-        PR_TITLE=$(echo "${{ steps.get-pr.outputs.title }}" | tr '[:upper:]' '[:lower:]')
+        PR_TITLE="${{ steps.get-pr.outputs.pr_title }}"
+        PR_TITLE=$(echo "$PR_TITLE" | tr '[:upper:]' '[:lower:]')
         if [[ "$PR_TITLE" == *"major"* ]]; then
           echo "BUMP_TYPE=major" >> $GITHUB_ENV
         elif [[ "$PR_TITLE" == *"minor"* ]]; then
