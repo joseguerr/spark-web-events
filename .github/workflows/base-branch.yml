@@ -73,6 +73,7 @@ jobs:
           echo "BUMP_TYPE=minor" >> $GITHUB_ENV
         else
           echo "BUMP_TYPE=patch" >> $GITHUB_ENV
+        fi
 
     - name: Get latest release version
       id: get-latest-version
