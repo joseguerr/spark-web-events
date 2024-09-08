@@ -1,4 +1,7 @@
 # Spark ETL to ingest Web Events
+
+[![codecov](https://codecov.io/gh/joseguerr/spark-web-events/branch/main/graph/badge.svg)](https://codecov.io/gh/joseguerr/spark-web-events)
+
 Spark data pipeline that ingests and transforms airbyte events data.
 
 ## Data Architecture
