@@ -1,0 +1,7 @@
+---
+dynaconf_merge:
+  true
+
+global:
+  task_argument_class_mapping:
+    dummy: spark_web_events_etl.tasks.Dummy

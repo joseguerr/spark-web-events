@@ -1,10 +1,13 @@
 # Spark ETL to ingest Web Events
+
+[![codecov](https://codecov.io/gh/joseguerr/spark-web-events/branch/main/graph/badge.svg)](https://codecov.io/gh/joseguerr/spark-web-events)
+
 Spark data pipeline that ingests and transforms airbyte events data.
 
 ## Data Architecture
 Implemented Data Lakehouse architecture with the following layers:
 - `Raw`: Contains raw data files directly ingested from an event stream, e.g. Kafka. This data should generally not be accessible.
-- `Standardised`: Contains standardized data (catalogued tables) based on the raw data with basic cleaning transformations applied -> PII masking, flatten nested columns and basic data quality checks.
+- `Standardised`: Contains standardised data (catalogued tables) based on the raw data with basic cleaning transformations applied -> PII masking, flatten nested columns and basic data quality checks.
 - `Curated`: Contains transformed data (catalogued tables) according to business and data quality rules.
 
 [Delta](https://delta.io/) is used as the table format.

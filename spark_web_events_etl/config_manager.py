@@ -18,9 +18,7 @@ class ConfigManager:
     @staticmethod
     def _validate_config_file(config_file: str) -> None:
         if not os.path.isfile(config_file):
-            raise FileNotFoundError(
-                f"Provided config file '{config_file}' does not exist"
-            )
+            raise FileNotFoundError(f"Provided config file '{config_file}' does not exist")
 
 
 class ConfigException(Exception):
