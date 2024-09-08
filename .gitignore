@@ -45,3 +45,6 @@ MANIFEST
 /metastore_db
 /derby.log
 /spark-warehouse
+
+# Test outputs
+coverage.xml
