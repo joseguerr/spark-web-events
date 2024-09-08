@@ -34,6 +34,7 @@ jobs:
     - name: Upload results to Codecov
       uses: codecov/codecov-action@v4
       with:
+        files: ./coverage.xml
         token: ${{ secrets.CODECOV_TOKEN }}
 
   release:
@@ -56,30 +57,13 @@ jobs:
     - name: Build application
       run: make build
 
-    - name: Get last merged PR title
-      id: get-pr-title
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const { data: pulls } = await github.pulls.list({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            state: 'closed',
-            sort: 'updated',
-            direction: 'desc',
-            per_page: 1
-          });
-          const lastMergedPR = pulls.find(pr => pr.merged_at !== null);
-          if (lastMergedPR) {
-            core.setOutput('title', lastMergedPR.title);
-          } else {
-            core.setFailed('No merged pull request found.');
-          }
+    - name: Get last merged PR
+      uses: 8BitJonny/gh-get-current-pr@3.0.0
+      id: get-pr
 
-    - name: Determine version bump type
-      id: version-bump
+    - name: Determine PR version bump type
       run: |
-        PR_TITLE=$(echo "${{ steps.get-pr-title.outputs.title }}" | tr '[:upper:]' '[:lower:]')
+        PR_TITLE=$(echo "${{ steps.get-pr.outputs.title }}" | tr '[:upper:]' '[:lower:]')
         if [[ "$PR_TITLE" == *"major"* ]]; then
           echo "BUMP_TYPE=major" >> $GITHUB_ENV
         elif [[ "$PR_TITLE" == *"minor"* ]]; then
@@ -91,10 +75,7 @@ jobs:
       id: get-latest-version
       run: |
         LATEST_VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
-        if [[ "$LATEST_VERSION" == "null" ]]; then
-          echo "LATEST_VERSION=0.1.0" >> $GITHUB_ENV
-        else
-          echo "LATEST_VERSION=${LATEST_VERSION}" >> $GITHUB_ENV
+        echo "LATEST_VERSION=${LATEST_VERSION}" >> $GITHUB_ENV
 
     - name: Bump version
       id: bump-version
@@ -122,4 +103,4 @@ jobs:
     - name: Publish to S3
       run: aws s3 sync --delete deps s3://spark-web-events-etl-binaries/${DEST_DIR}
       env:
-        DEST_DIR: "PR-${{ github.event.pull_request.number }}"
+        DEST_DIR: "release-${{ env.NEW_VERSION }}"

@@ -14,7 +14,7 @@ lint: # Run code linter tools.
 
 .PHONY: test
 test: # Run unit and integration tests.
-	poetry run pytest --cov -vvvv --showlocals --disable-warnings tests
+	poetry run pytest --cov=spark_web_events_etl --cov-report=xml --cov-report=term-missing -vvvv --showlocals --disable-warnings tests
 
 .PHONY: build
 build: # Build and package the application and its dependencies to be used through spark-submit.
