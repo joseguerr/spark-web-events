@@ -66,4 +66,4 @@ jobs:
     - name: Publish to S3
       run: aws s3 sync --delete deps s3://spark-web-events-etl-binaries/${DEST_DIR}
       env:
-        DEST_DIR: "PR-${{ github.event.pull_request.number }}"
+        DEST_DIR: "pr-${{ github.event.pull_request.number }}"
