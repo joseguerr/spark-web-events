@@ -34,7 +34,8 @@ class CurateDataTransformation(AbstractTransformation):
     def _calculate_domain_of_interest(df: DataFrame) -> DataFrame:
         return df.withColumn(
             "domain_of_interest",
-            when(col("referring_domain") == "$direct", "direct traffic")
+            when(col("referring_domain").isNull(), "unknown")
+            .when(col("referring_domain") == "$direct", "direct traffic")
             .when(col("referring_domain").like("%opensea%"), "opensea")
             .when(col("referring_domain").like("%abc%"), "abc")
             .otherwise("other"),
