@@ -37,9 +37,9 @@ def schema_raw() -> StructType:
                     [
                         StructField("referring_domain", StringType(), False),
                         StructField("distinct_id", StringType(), False),
-                        StructField("device_id", StringType(), False),
+                        StructField("device_id", StringType(), True),
                         StructField("device", StringType(), True),
-                        StructField("current_url", StringType(), False),
+                        StructField("current_url", StringType(), True),
                         StructField("processed_time", StringType(), False),
                     ]
                 ),
@@ -55,8 +55,8 @@ def schema_standardised() -> StructType:
         [
             StructField("distinct_id", StringType(), False),
             StructField("device_id", StringType(), False),
-            StructField("referring_domain", StringType(), False),
-            StructField("current_url", StringType(), False),
+            StructField("referring_domain", StringType(), True),
+            StructField("current_url", StringType(), True),
             StructField("device", StringType(), True),
             StructField("event_processed_timestamp", LongType(), False),
             StructField("airbyte_emitted_at_timestamp", LongType(), False),

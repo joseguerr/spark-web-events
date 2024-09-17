@@ -8,14 +8,6 @@ from spark_web_events_etl.config_manager import ConfigException
 from spark_web_events_etl.main import main
 
 
-def test_run_end_to_end_idempotent(spark: SparkSession, config_file_base_path: str, execution_date: str) -> None:
-    _test_run_standardise(spark, config_file_base_path, execution_date)
-    _test_run_standardise(spark, config_file_base_path, execution_date)
-
-    _test_run_curate(spark, config_file_base_path, execution_date)
-    _test_run_curate(spark, config_file_base_path, execution_date)
-
-
 def test_run_inexistent_task(execution_date: str, config_file_base_path: str) -> None:
     # GIVEN
     config_file_path = f"{config_file_base_path}/test_app_config_invalid_tasks.yaml"
@@ -32,6 +24,14 @@ def test_run_inexistent_task(execution_date: str, config_file_base_path: str) ->
     # THEN
     with pytest.raises(ConfigException):
         main()
+
+
+def test_run_end_to_end_idempotent(spark: SparkSession, config_file_base_path: str) -> None:
+    _test_run_standardise(spark, config_file_base_path, "2023-04-12")
+    _test_run_standardise(spark, config_file_base_path, "2023-04-12")
+
+    _test_run_curate(spark, config_file_base_path, "2023-04-12")
+    _test_run_curate(spark, config_file_base_path, "2023-04-12")
 
 
 def _test_run_standardise(spark: SparkSession, config_file_base_path: str, execution_date: str) -> None:
@@ -76,10 +76,8 @@ def _test_run_curate(spark: SparkSession, config_file_base_path: str, execution_
     assert df_output.count() == 2
 
 
-@pytest.fixture()
-def execution_date() -> str:
-    return "2023-04-12"
-
+def test_save_null_field_as_string(spark: SparkSession, config_file_base_path: str) -> None:
+    _test_run_standardise(spark, config_file_base_path, "2023-04-11")
 
 @pytest.fixture()
 def config_file_base_path() -> str:
