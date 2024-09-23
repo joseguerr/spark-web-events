@@ -1350,6 +1350,17 @@ socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
 zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
+name = "venv-pack"
+version = "0.2.0"
+description = "Package virtual environments for redistribution"
+optional = false
+python-versions = "*"
+files = [
+    {file = "venv-pack-0.2.0.tar.gz", hash = "sha256:33bbed48728bd5d1fee0a89c3082702b5d100c8021b2da9ea384b23ac410d3cd"},
+    {file = "venv_pack-0.2.0-py2.py3-none-any.whl", hash = "sha256:95c5a51b8e5576143843b7693e1ac275c627348477562669bcd250847fa08136"},
+]
+
+[[package]]
 name = "virtualenv"
 version = "20.26.3"
 description = "Virtual Python Environment builder"
@@ -1477,4 +1488,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "59b789b28382530adc8f87393e005b84e384bca1086f889d75f3f17695e581ac"
+content-hash = "abff5e605b5bed428b32af6061232fe8645ae4c62b1212736bc8e77ef1b58fad"

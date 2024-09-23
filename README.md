@@ -30,7 +30,7 @@ Configuration is defined in [app_config.yaml](app_config.yaml) and managed by th
 ## Pre-requisites
 - OpenJDK@17
 - Scala@2.12
-- Spark@3.5.0
+- Spark@3.5.2
 - Python@3.11
 
 ## Execution instructions

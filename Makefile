@@ -24,6 +24,14 @@ build: # Build and package the application and its dependencies to be used throu
 	cp spark_web_events_etl/main.py app_config.yaml spark_web_events_etl/tasks/*/dq_checks_*.yaml deps
 	poetry run python -m zipfile -c deps/libs.zip libs/*
 
+.PHONY: docker-build
+docker-build: # Build the application in a docker container.
+	docker build -t jg-data-engineer-test .
+
+.PHONY: docker-run
+docker-run: # Run the application in a docker container.
+	docker run -it jg-data-engineer-test
+
 .PHONY: run-local
 run-local: # Run a task locally (example: make run-local task=standardise execution-date=2023-04-12).
 	poetry run spark-submit \
